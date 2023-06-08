@@ -14,17 +14,13 @@ from config import (
 )
 
 
-account = Account(TWITTER_EMAIL, TWITTER_USERNAME, TWITTER_PASSWORD, debug=2, save=True)
-
-
 def get_music():
-    # I hate JSON
-    current_tracks = json.loads(
-        requests.get(
-            f"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={LASTFM_USERNAME}&api_key={LASTFM_API_KEY}&limit=1&format=json"
-        ).text
-    )["recenttracks"]["track"][0]
-    return current_tracks["name"], current_tracks["artist"]["#text"]
+    # I hate this
+    tracks = requests.get(
+        f"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={LASTFM_USERNAME}&api_key={LASTFM_API_KEY}&limit=1&format=json"
+    )
+    tracks = json.loads(tracks.text)["recenttracks"]["track"][0]
+    return tracks["name"], tracks["artist"]["#text"]
 
 
 def set_description(title, artist):
@@ -41,6 +37,9 @@ def set_description(title, artist):
 
 
 if __name__ == "__main__":
+    account = Account(
+        TWITTER_EMAIL, TWITTER_USERNAME, TWITTER_PASSWORD, debug=2, save=True
+    )
     last_song = None
 
     while True:
