@@ -3,7 +3,7 @@ import json
 import time
 from math import floor
 from twitter.account import Account
-from src.config import (
+from config import (
     TWITTER_EMAIL,
     TWITTER_USERNAME,
     TWITTER_PASSWORD,
@@ -45,7 +45,9 @@ if __name__ == "__main__":
 
     while True:
         title, artist = get_music()
-        if last_song != title:
-            last_song = title
+
+        if last_song != title and title and artist:
             set_description(title, artist)
+            last_song = title
+
         time.sleep(CHECK_INTERVAL)
